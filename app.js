@@ -66,7 +66,7 @@ function groupByDate(calls){
 function render(){
   unitStat.textContent = state.selected;
   const today = currentShiftKey();
-  todayStat.textContent = state.calls.filter(c => shiftDateKey(c.date, c.time) === today).length;
+  todayStat.textContent = state.calls.filter(c => (c.shiftDate || shiftDateKey(c.date, c.time)) === today).length;
   weekStat.textContent = state.calls.length;
 
   const days = Number(daysSelect.value || 3);
@@ -111,7 +111,10 @@ async function loadCalls(){
     const res = await fetch(`/api/calls?truck=${encodeURIComponent(state.selected.toLowerCase())}&days=${days}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    state.calls = Array.isArray(data.calls) ? data.calls : [];
+    state.calls = (Array.isArray(data.calls) ? data.calls : []).map(call => ({
+      ...call,
+      shiftDate: shiftDateKey(call.date, call.time)
+    }));
     statusEl.textContent = data.source === "live" 
       ? `Live data loaded. Last updated ${new Date().toLocaleTimeString()}.`
       : `Loaded demo/parsed data. ${data.note || ""}`;
