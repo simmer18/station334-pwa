@@ -1,4 +1,4 @@
-const CACHE = "station334-v12";
+const CACHE = "station334-vercel-v13";
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(["./", "./index.html", "./style.css", "./app.js", "./manifest.webmanifest", "./assets/station-logo.jpeg"])));
 });
