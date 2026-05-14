@@ -71,7 +71,9 @@ function render(){
 
   const days = Number(daysSelect.value || 3);
   const keys = Array.from({length:days},(_,i)=>{
-    const d = new Date(today + "T12:00:00"); d.setDate(d.getDate()-i); return dateKey(d);
+    const d = new Date(today + "T12:00:00");
+    d.setDate(d.getDate()-i);
+    return dateKey(d);
   });
   const groups = groupByDate(state.calls);
   daysEl.innerHTML = "";
