@@ -27,14 +27,36 @@ function renderTabs(){
 }
 
 function dateKey(d){ return d.toISOString().slice(0,10); }
+
+function timeToMinutes(time){
+  const m = String(time || "").match(/^(\\d{1,2}):(\\d{2})/);
+  if (!m) return -1;
+  return Number(m[1]) * 60 + Number(m[2]);
+}
+
+function shiftDateKey(date, time){
+  const key = date || dateKey(new Date());
+  const minutes = timeToMinutes(time);
+  const d = new Date(key + "T12:00:00");
+  if (minutes >= 0 && minutes < 7 * 60) d.setDate(d.getDate() - 1);
+  return dateKey(d);
+}
+
+function currentShiftKey(){
+  const now = new Date();
+  if (now.getHours() < 7) now.setDate(now.getDate() - 1);
+  return dateKey(now);
+}
+
 function niceDate(key){
   const d = new Date(key + "T12:00:00");
-  return d.toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"}) + (key === dateKey(new Date()) ? " (Today)" : "");
+  return d.toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"}) + (key === currentShiftKey() ? " (Current Shift)" : "");
 }
+
 function groupByDate(calls){
   const groups = {};
   calls.forEach(c => {
-    const k = c.date || dateKey(new Date());
+    const k = shiftDateKey(c.date, c.time);
     groups[k] ??= [];
     groups[k].push(c);
   });
@@ -43,13 +65,13 @@ function groupByDate(calls){
 
 function render(){
   unitStat.textContent = state.selected;
-  const today = dateKey(new Date());
-  todayStat.textContent = state.calls.filter(c => c.date === today).length;
+  const today = currentShiftKey();
+  todayStat.textContent = state.calls.filter(c => shiftDateKey(c.date, c.time) === today).length;
   weekStat.textContent = state.calls.length;
 
   const days = Number(daysSelect.value || 3);
   const keys = Array.from({length:days},(_,i)=>{
-    const d = new Date(); d.setDate(d.getDate()-i); return dateKey(d);
+    const d = new Date(today + "T12:00:00"); d.setDate(d.getDate()-i); return dateKey(d);
   });
   const groups = groupByDate(state.calls);
   daysEl.innerHTML = "";

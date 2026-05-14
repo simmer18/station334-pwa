@@ -1,16 +1,12 @@
-Station 334 PWA FULL v7
+Station 334 PWA FULL v8
 
-Fix:
-- Corrects the JavaScript syntax error in netlify/functions/calls.js.
-- Keeps full dashboard, TORONTO FIRE header, P334/FB334 tabs, PWA icon, and multi-day selector.
-- Attempts to parse IncidentType from ASC as the call type.
+Change:
+- Calls before 07:00 are grouped under the previous shift/day.
+- The dashboard stat now says Current Shift instead of Today.
+- Example: a call at 06:20 on May 14 displays under the May 13 shift.
 
-To update GitHub:
-1. Unzip this v7 folder.
-2. In your GitHub repo, replace the old files with the INSIDE contents of this folder.
+Update:
+1. Unzip this v8 folder.
+2. Upload the INSIDE contents to GitHub over the existing files.
 3. Commit changes.
-4. Netlify should redeploy.
-5. Test:
-   https://station334calls.netlify.app/.netlify/functions/calls?truck=p334&days=3
-
-If the test shows JSON, the app should work.
+4. Netlify redeploys automatically.
