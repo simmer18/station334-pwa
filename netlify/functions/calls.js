@@ -17,6 +17,15 @@ function todayKey(offset) {
 }
 
 
+
+function getShiftDate(date, time) {
+  const match = String(time || "").trim().match(/^([0-9]{1,2}):([0-9]{2})/);
+  const minutes = match ? Number(match[1]) * 60 + Number(match[2]) : -1;
+  const d = new Date(String(date || todayKey(0)) + "T12:00:00");
+  if (minutes >= 0 && minutes < 420) d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
 function shiftDateKey(date, time) {
   const m = String(time || "").trim().match(/^([0-9]{1,2}):([0-9]{2})/);
   const minutes = m ? Number(m[1]) * 60 + Number(m[2]) : -1;
@@ -134,10 +143,14 @@ exports.handler = async function(event) {
     );
 
     calls = calls.map(function(call) {
-      call.shiftDate = shiftDateKey(call.date, call.time);
+      const rawDate = call.date;
+      const shiftDate = getShiftDate(call.date, call.time);
+      call.rawDate = rawDate;
+      call.shiftDate = shiftDate;
+      call.date = shiftDate;
       return call;
     }).filter(function(call) {
-      return !call.shiftDate || allowed.has(call.shiftDate) || allowed.has(call.date);
+      return !call.date || allowed.has(call.date);
     }).slice(0, 250);
 
     return {
