@@ -1,10 +1,10 @@
 {
   "name": "station334-pwa",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "private": true,
   "scripts": {
     "start": "netlify dev",
-    "build": "echo 'Static app ready'"
+    "build": "echo Static app ready"
   },
   "dependencies": {},
   "devDependencies": {}

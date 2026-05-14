@@ -1,15 +1,16 @@
-Station 334 PWA FULL v6
+Station 334 PWA FULL v7
 
-Fixes:
-- Restores live data loading after v5 broke the proxy.
-- No external parser dependency.
-- Keeps TORONTO FIRE header.
-- Attempts to show the ASC IncidentType column.
+Fix:
+- Corrects the JavaScript syntax error in netlify/functions/calls.js.
+- Keeps full dashboard, TORONTO FIRE header, P334/FB334 tabs, PWA icon, and multi-day selector.
+- Attempts to parse IncidentType from ASC as the call type.
 
-Deploy:
-1. Unzip this folder.
-2. Drag the unzipped folder to Netlify Drop.
-3. Open production deploy.
-4. If your phone/browser still shows old data, refresh the page twice or open the new Netlify URL.
+To update GitHub:
+1. Unzip this v7 folder.
+2. In your GitHub repo, replace the old files with the INSIDE contents of this folder.
+3. Commit changes.
+4. Netlify should redeploy.
+5. Test:
+   https://station334calls.netlify.app/.netlify/functions/calls?truck=p334&days=3
 
-If this shows addresses but not incident type perfectly, send a screenshot of the ASC page table and I can tune the parser again.
+If the test shows JSON, the app should work.
