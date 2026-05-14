@@ -1,9 +1,0 @@
-[build]
-  publish = "."
-  functions = "netlify/functions"
-  command = "npm run build"
-
-[[redirects]]
-  from = "/api/calls"
-  to = "/.netlify/functions/calls"
-  status = 200
