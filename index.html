@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Station 334 Calls</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#9b1010">
+  <link rel="apple-touch-icon" href="assets/station-logo.jpeg">
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <img class="logo" src="assets/station-logo.jpeg" alt="Station 334 logo">
+      <div>
+        <div class="kicker">TORONTO FIRE</div>
+        <h1>Station 334 Calls</h1>
+        <div class="sub">P334 & FB334 live apparatus board</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="stat"><label>Unit</label><strong id="unitStat">P334</strong></div>
+      <div class="stat"><label>Today</label><strong id="todayStat">0</strong></div>
+      <div class="stat"><label>This Week</label><strong id="weekStat">0</strong></div>
+    </section>
+
+    <div class="tabs" id="tabs"></div>
+
+    <section class="controls">
+      <div class="inputrow">
+        <input id="unitInput" placeholder="Add unit e.g. P332" />
+        <button class="btn primary" id="addBtn">+</button>
+      </div>
+    </section>
+
+    <section class="bar">
+      <div class="actions">
+        <button class="btn" id="refreshBtn">↻ Refresh</button>
+        <select class="select" id="daysSelect">
+          <option value="1">1 Day</option>
+          <option value="3" selected>3 Days</option>
+          <option value="7">7 Days</option>
+          <option value="14">14 Days</option>
+        </select>
+      </div>
+      <div class="status" id="status">Ready.</div>
+    </section>
+
+    <section id="days"></section>
+  </main>
+
+  <nav class="bottom">
+    <div class="navitem active">▦<br>Board</div>
+    <div class="navitem">◷<br>History</div>
+    <div class="navitem">⌖<br>Map</div>
+    <div class="navitem">🚒<br>Units</div>
+    <div class="navitem">⚙<br>Settings</div>
+  </nav>
+  <script src="app.js"></script>
+</body>
+</html>
