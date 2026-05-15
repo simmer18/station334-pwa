@@ -6,9 +6,16 @@ function torontoToday(){const p=parts();return `${p.year}-${p.month}-${p.day}`;}
 function shiftNow(){const p=parts();const d=new Date(`${p.year}-${p.month}-${p.day}T12:00:00`); if(Number(p.hour)<7)d.setDate(d.getDate()-1); return d.toISOString().slice(0,10);}
 function mins(t){const m=String(t||"").match(/^([0-9]{1,2}):([0-9]{2})/);return m?Number(m[1])*60+Number(m[2]):-1;}
 function shiftDate(date,time){const d=new Date(`${date||torontoToday()}T12:00:00`); const n=mins(time); if(n>=0&&n<420)d.setDate(d.getDate()-1); return d.toISOString().slice(0,10);}
+function shiftSortMinutes(time){
+  const n = mins(time);
+  if (n < 0) return -1;
+  if (n < 420) return n - 1440;
+  return n;
+}
+
 function nice(key){const d=new Date(key+"T12:00:00");return d.toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"})+(key===shiftNow()?" (Current Shift)":"");}
 function renderTabs(){tabs.innerHTML="";state.units.forEach(u=>{const b=document.createElement("button");b.textContent=u;b.className=u===state.selected?"active":"";b.onclick=()=>{state.selected=u;renderTabs();loadCalls();};tabs.appendChild(b);});}
-function group(calls){const g={};calls.forEach(c=>{const k=c.shiftDate||shiftDate(c.date,c.time);(g[k]??=[]).push(c);});Object.keys(g).forEach(k=>g[k].sort((a,b)=>mins(b.time)-mins(a.time)));return g;}
+function group(calls){const g={};calls.forEach(c=>{const k=c.shiftDate||shiftDate(c.date,c.time);(g[k]??=[]).push(c);});Object.keys(g).forEach(k=>g[k].sort((a,b)=>shiftSortMinutes(b.time)-shiftSortMinutes(a.time)));return g;}
 function render(){const cur=shiftNow();unitStat.textContent=state.selected;shiftStat.textContent=state.calls.filter(c=>(c.shiftDate||shiftDate(c.date,c.time))===cur).length;totalStat.textContent=state.calls.length;const g=group(state.calls);const days=Number(daysSelect.value||3);daysEl.innerHTML="";for(let i=0;i<days;i++){const d=new Date(cur+"T12:00:00");d.setDate(d.getDate()-i);const key=d.toISOString().slice(0,10);const list=g[key]||[];const s=document.createElement("section");s.className="day";s.innerHTML=`<div class="dayHead"><span>▣ ${nice(key)}</span><span class="count">${list.length}</span></div>`;if(!list.length){s.innerHTML+=`<div class="empty">No calls for this day.</div>`;}else{list.forEach(c=>{const r=document.createElement("div");r.className="call";r.innerHTML=`<div class="time">${c.time||""}</div><div><div class="type">${c.type||"Call"}</div><div class="addr">${c.address||""}</div></div><div class="units">${(c.units||[state.selected]).map(u=>`<span class="unitPill">${u}</span>`).join("")}</div>`;s.appendChild(r);});}daysEl.appendChild(s);}}
 async function loadCalls(){const days=Number(daysSelect.value||3);statusEl.textContent=`Loading ${state.selected}...`;try{const res=await fetch(`/api/calls?truck=${encodeURIComponent(state.selected.toLowerCase())}&days=${days}&t=${Date.now()}`,{cache:"no-store"});const data=await res.json();if(!res.ok||data.source==="error")throw new Error(data.note||"API error");state.calls=(data.calls||[]).map(c=>({...c,shiftDate:c.shiftDate||shiftDate(c.date,c.time)}));statusEl.textContent=`Live data loaded. Last updated ${new Date().toLocaleTimeString()}.`;}catch(e){state.calls=[];statusEl.textContent=`Could not load live data: ${e.message}`;}render();}
 $("refreshBtn").onclick=loadCalls;daysSelect.onchange=loadCalls;$("addBtn").onclick=()=>{const u=String(unitInput.value||"").trim().toUpperCase();if(!u)return;if(!state.units.includes(u))state.units.push(u);state.selected=u;unitInput.value="";renderTabs();loadCalls();};
