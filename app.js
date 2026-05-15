@@ -26,7 +26,11 @@ function renderTabs(){
   });
 }
 
-function dateKey(d){ return d.toISOString().slice(0,10); }
+function dateKey(d){
+return d.toLocaleDateString("en-CA", {
+   timeZone: "America/Toronto"
+});
+}
 
 function timeToMinutes(time){
   const m = String(time || "").match(/^(\\d{1,2}):(\\d{2})/);
