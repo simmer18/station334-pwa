@@ -1,17 +1,17 @@
-Station 334 Vercel Build - Shift Sort Update
+Station 334 Vercel Build - Operational Sort Update
 
-This version keeps the 7am shift logic and fixes the call order within each shift.
+This version fixes shift call order.
 
-Display order inside a shift:
-- 07:00 to 23:59 newest-first at the top
-- 00:00 to 06:59 newest-first underneath, still assigned to the previous shift
+For a 7am-to-7am shift, calls display newest operationally first:
+- 00:00 to 06:59 at the top
+- then 23:59 down to 07:00
 
 Example:
+05:50
 18:02
 16:51
 11:41
 08:04
-06:20
 
 Deploy:
 1. Unzip this file.

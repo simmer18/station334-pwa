@@ -9,7 +9,12 @@ function shiftDate(date,time){const d=new Date(`${date||torontoToday()}T12:00:00
 function shiftSortMinutes(time){
   const n = mins(time);
   if (n < 0) return -1;
-  if (n < 420) return n - 1440;
+
+  // Operational shift order:
+  // 00:00-06:59 should appear ABOVE the previous daytime/evening calls,
+  // because those calls are the latest part of the 7am-to-7am shift.
+  if (n < 420) return n + 1440;
+
   return n;
 }
 
