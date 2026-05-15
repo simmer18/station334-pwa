@@ -27,9 +27,9 @@ function renderTabs(){
 }
 
 function dateKey(d){
-return d.toLocaleDateString("en-CA", {
-   timeZone: "America/Toronto"
-});
+  return d.toLocaleDateString("en-CA", {
+    timeZone: "America/Toronto"
+  });
 }
 
 function timeToMinutes(time){
